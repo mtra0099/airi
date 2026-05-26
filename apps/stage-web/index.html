@@ -1,19 +1,36 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- AIRI: auto-configure Hermes (OmniRoute) provider on first load -->
+    <!-- AIRI: auto-configure Hermes + local voice on first load -->
     <script>
       ;(function () {
         try {
-          var KEY = 'settings/consciousness/active-provider'
-          if (!localStorage.getItem(KEY)) {
-            var creds = {}
-            try { creds = JSON.parse(localStorage.getItem('settings/credentials/providers') || '{}') || {} } catch (e) {}
-            creds['openai-compatible'] = { baseUrl: location.origin + '/v1', apiKey: 'hermes' }
-            localStorage.setItem('settings/credentials/providers', JSON.stringify(creds))
-            localStorage.setItem(KEY, 'openai-compatible')
-            localStorage.setItem('settings/consciousness/active-model', 'hermes-airi')
-            localStorage.setItem('onboarding/completed', 'true')
+          var ls = localStorage
+          function getCreds() { try { return JSON.parse(ls.getItem('settings/credentials/providers') || '{}') || {} } catch (e) { return {} } }
+          var origin = location.origin
+          if (!ls.getItem('settings/consciousness/active-provider')) {
+            var c = getCreds()
+            c['openai-compatible'] = { baseUrl: origin + '/v1', apiKey: 'hermes' }
+            ls.setItem('settings/credentials/providers', JSON.stringify(c))
+            ls.setItem('settings/consciousness/active-provider', 'openai-compatible')
+            ls.setItem('settings/consciousness/active-model', 'hermes-airi')
+            ls.setItem('onboarding/completed', 'true')
+          }
+          if (!ls.getItem('settings/hearing/active-provider')) {
+            var c2 = getCreds()
+            c2['openai-compatible-audio-transcription'] = { baseUrl: origin + '/stt/v1', apiKey: 'x' }
+            ls.setItem('settings/credentials/providers', JSON.stringify(c2))
+            ls.setItem('settings/hearing/active-provider', 'openai-compatible-audio-transcription')
+            ls.setItem('settings/hearing/active-model', 'Systran/faster-whisper-small')
+          }
+          var sp = ls.getItem('settings/speech/active-provider')
+          if (!sp || sp === 'speech-noop') {
+            var c3 = getCreds()
+            c3['openai-compatible-audio-speech'] = { baseUrl: origin + '/tts/v1', apiKey: 'x' }
+            ls.setItem('settings/credentials/providers', JSON.stringify(c3))
+            ls.setItem('settings/speech/active-provider', 'openai-compatible-audio-speech')
+            ls.setItem('settings/speech/active-model', 'kokoro')
+            ls.setItem('settings/speech/voice', 'af_heart')
           }
         } catch (e) {}
       })()
