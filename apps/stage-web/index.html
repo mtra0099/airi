@@ -1,6 +1,22 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- AIRI: auto-configure Hermes (OmniRoute) provider on first load -->
+    <script>
+      ;(function () {
+        try {
+          var KEY = 'settings/consciousness/active-provider'
+          if (!localStorage.getItem(KEY)) {
+            var creds = {}
+            try { creds = JSON.parse(localStorage.getItem('settings/credentials/providers') || '{}') || {} } catch (e) {}
+            creds['openai-compatible'] = { baseUrl: location.origin + '/v1', apiKey: 'hermes' }
+            localStorage.setItem('settings/credentials/providers', JSON.stringify(creds))
+            localStorage.setItem(KEY, 'openai-compatible')
+            localStorage.setItem('settings/consciousness/active-model', 'hermes-airi')
+          }
+        } catch (e) {}
+      })()
+    </script>
     <meta charset="UTF-8" />
     <title>AIRI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
