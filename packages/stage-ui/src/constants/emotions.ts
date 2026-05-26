@@ -38,12 +38,12 @@ export const EMOTION_VRMExpressionName_value = {
   [Emotion.Happy]: 'happy',
   [Emotion.Sad]: 'sad',
   [Emotion.Angry]: 'angry',
-  [Emotion.Think]: 'think',
+  [Emotion.Think]: 'relaxed',
   [Emotion.Surprise]: 'surprised',
-  [Emotion.Awkward]: 'neutral',
-  [Emotion.Question]: 'think',
+  [Emotion.Awkward]: 'relaxed',
+  [Emotion.Question]: 'surprised',
   [Emotion.Neutral]: 'neutral',
-  [Emotion.Curious]: 'think',
+  [Emotion.Curious]: 'relaxed',
 } satisfies Record<Emotion, string | undefined>
 
 export const EMOTION_SpineAnimationName_value = {

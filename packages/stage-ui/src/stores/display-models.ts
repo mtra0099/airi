@@ -26,6 +26,7 @@ const presetVrmAvatarAUrl = new URL('../assets/vrm/models/AvatarSample-A/AvatarS
 const presetVrmAvatarAPreview = new URL('../assets/vrm/models/AvatarSample-A/preview.png', import.meta.url).href
 const presetVrmAvatarBUrl = new URL('../assets/vrm/models/AvatarSample-B/AvatarSample_B.vrm', import.meta.url).href
 const presetVrmAvatarBPreview = new URL('../assets/vrm/models/AvatarSample-B/preview.png', import.meta.url).href
+const presetVrmKazukiUrl = new URL('../assets/vrm/models/Kazuki/kazuki.vrm', import.meta.url).href
 
 export interface DisplayModelFile {
   id: string
@@ -52,6 +53,7 @@ const displayModelsPresets: DisplayModel[] = [
   { id: 'preset-live2d-2', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dFreeUrl, name: 'Hiyori (Free)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
   { id: 'preset-vrm-1', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmAvatarAUrl, name: 'AvatarSample_A', previewImage: presetVrmAvatarAPreview, importedAt: 1733113886840 },
   { id: 'preset-vrm-2', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmAvatarBUrl, name: 'AvatarSample_B', previewImage: presetVrmAvatarBPreview, importedAt: 1733113886840 },
+  { id: 'preset-vrm-kazuki', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmKazukiUrl, name: 'Kazuki', previewImage: presetVrmAvatarAPreview, importedAt: 1733113886840 },
 ]
 
 export const useDisplayModelsStore = defineStore('display-models', () => {

@@ -9,6 +9,7 @@
           function creds() { try { return JSON.parse(ls.getItem('settings/credentials/providers') || '{}') || {} } catch (e) { return {} } }
           function save(c) { ls.setItem('settings/credentials/providers', JSON.stringify(c)) }
           var origin = location.origin
+          if (!ls.getItem('settings/stage/kazuki-applied')) { ls.setItem('settings/stage/model', 'preset-vrm-kazuki'); ls.setItem('settings/stage/kazuki-applied', '1') }
           if (!ls.getItem('settings/consciousness/active-provider')) {
             var c = creds()
             c['openai-compatible'] = { baseUrl: origin + '/v1', apiKey: 'hermes' }
