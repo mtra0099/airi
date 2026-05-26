@@ -1,33 +1,36 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- AIRI: auto-configure Hermes + local voice on first load -->
+    <!-- AIRI: auto-configure Hermes + local voice on first load (self-repairing) -->
     <script>
       ;(function () {
         try {
           var ls = localStorage
-          function getCreds() { try { return JSON.parse(ls.getItem('settings/credentials/providers') || '{}') || {} } catch (e) { return {} } }
+          function creds() { try { return JSON.parse(ls.getItem('settings/credentials/providers') || '{}') || {} } catch (e) { return {} } }
+          function save(c) { ls.setItem('settings/credentials/providers', JSON.stringify(c)) }
           var origin = location.origin
           if (!ls.getItem('settings/consciousness/active-provider')) {
-            var c = getCreds()
+            var c = creds()
             c['openai-compatible'] = { baseUrl: origin + '/v1', apiKey: 'hermes' }
-            ls.setItem('settings/credentials/providers', JSON.stringify(c))
+            save(c)
             ls.setItem('settings/consciousness/active-provider', 'openai-compatible')
             ls.setItem('settings/consciousness/active-model', 'hermes-airi')
             ls.setItem('onboarding/completed', 'true')
           }
+          var c2 = creds()
+          var stt = c2['openai-compatible-audio-transcription'] || {}
+          stt.baseUrl = stt.baseUrl || (origin + '/stt/v1'); stt.apiKey = stt.apiKey || 'x'; stt.model = stt.model || 'Systran/faster-whisper-small'
+          c2['openai-compatible-audio-transcription'] = stt; save(c2)
           if (!ls.getItem('settings/hearing/active-provider')) {
-            var c2 = getCreds()
-            c2['openai-compatible-audio-transcription'] = { baseUrl: origin + '/stt/v1', apiKey: 'x' }
-            ls.setItem('settings/credentials/providers', JSON.stringify(c2))
             ls.setItem('settings/hearing/active-provider', 'openai-compatible-audio-transcription')
             ls.setItem('settings/hearing/active-model', 'Systran/faster-whisper-small')
           }
+          var c3 = creds()
+          var tts = c3['openai-compatible-audio-speech'] || {}
+          tts.baseUrl = tts.baseUrl || (origin + '/tts/v1'); tts.apiKey = tts.apiKey || 'x'; tts.model = tts.model || 'kokoro'; tts.voice = tts.voice || 'af_heart'
+          c3['openai-compatible-audio-speech'] = tts; save(c3)
           var sp = ls.getItem('settings/speech/active-provider')
           if (!sp || sp === 'speech-noop') {
-            var c3 = getCreds()
-            c3['openai-compatible-audio-speech'] = { baseUrl: origin + '/tts/v1', apiKey: 'x' }
-            ls.setItem('settings/credentials/providers', JSON.stringify(c3))
             ls.setItem('settings/speech/active-provider', 'openai-compatible-audio-speech')
             ls.setItem('settings/speech/active-model', 'kokoro')
             ls.setItem('settings/speech/voice', 'af_heart')
