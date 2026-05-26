@@ -169,7 +169,7 @@ export default defineConfig({
     ...(env.TARGET_HUGGINGFACE_SPACE
       ? []
       : [VitePWA({
-          registerType: 'prompt',
+          registerType: 'autoUpdate',
           includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
           manifest: {
             name: 'AIRI',
@@ -206,6 +206,10 @@ export default defineConfig({
               /^\/ui\//,
               /^\/remote-assets\//,
               /^\/api\//,
+              /^\/hermes/,
+              /^\/v1\//,
+              /^\/unlock/,
+              /^\/health$/,
             ],
           },
         })]),
