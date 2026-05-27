@@ -13,6 +13,7 @@ import { useBackgroundStore } from '@proj-airi/stage-layouts/stores/background'
 import { HoloCoupon } from '@proj-airi/stage-ui/components'
 import { ViewControlSlider, WidgetStage } from '@proj-airi/stage-ui/components/scenes'
 import { useAudioRecorder } from '@proj-airi/stage-ui/composables/audio/audio-recorder'
+import { useHud } from '@proj-airi/stage-ui/composables/use-hud'
 import { useVAD } from '@proj-airi/stage-ui/stores/ai/models/vad'
 import { useChatOrchestratorStore } from '@proj-airi/stage-ui/stores/chat'
 import { useConsciousnessStore } from '@proj-airi/stage-ui/stores/modules/consciousness'
@@ -24,6 +25,7 @@ import { storeToRefs } from 'pinia'
 import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 
 const paused = ref(false)
+const { hudVisible } = useHud()
 
 function handleSettingsOpen(open: boolean) {
   paused.value = open
@@ -164,7 +166,7 @@ const cursorPosition = computed(() => ({
   >
     <div relative flex="~ col" z-2 h-100dvh w-100vw of-hidden>
       <!-- header -->
-      <div class="px-0 py-1 md:px-3 md:py-3" w-full gap-2>
+      <div v-show="hudVisible" class="px-0 py-1 md:px-3 md:py-3" w-full gap-2>
         <Header class="hidden md:flex" />
         <MobileHeader class="flex md:hidden" />
       </div>
@@ -177,7 +179,7 @@ const cursorPosition = computed(() => ({
               stageModelRenderer === 'live2d' ? 'top-0 h-full py-[20vh]' : 'top-1/2 -translate-y-1/2',
             ]"
           >
-            <ViewControlSlider />
+            <ViewControlSlider v-show="hudVisible" />
           </div>
           <WidgetStage
             h-full w-full
@@ -186,10 +188,24 @@ const cursorPosition = computed(() => ({
             :paused="paused"
           />
         </div>
-        <InteractiveArea v-if="!isMobile" h="85dvh" absolute right-4 flex flex-1 flex-col max-w="500px" min-w="30%" />
-        <MobileInteractiveArea v-if="isMobile" @settings-open="handleSettingsOpen" />
+        <InteractiveArea v-show="hudVisible" v-if="!isMobile" h="85dvh" absolute right-4 flex flex-1 flex-col max-w="500px" min-w="30%" />
+        <MobileInteractiveArea v-show="hudVisible" v-if="isMobile" @settings-open="handleSettingsOpen" />
       </div>
       <HoloCoupon />
+      <!-- reopen HUD: hover the bottom-right corner -->
+      <div
+        v-if="!hudVisible"
+        class="group fixed bottom-0 right-0 z-50 flex items-end justify-end"
+        style="width: 140px; height: 140px; padding: 1.25rem;"
+      >
+        <button
+          title="Show HUD"
+          class="border-2 border-neutral-100/60 rounded-xl border-solid bg-neutral-50/70 p-2 opacity-0 backdrop-blur-md transition-opacity duration-200 dark:border-neutral-800/30 dark:bg-neutral-800/70 group-hover:opacity-100"
+          @click="hudVisible = true"
+        >
+          <div i-solar:eye-outline class="size-5" text="neutral-500 dark:neutral-400" />
+        </button>
+      </div>
     </div>
   </BackgroundProvider>
 </template>
